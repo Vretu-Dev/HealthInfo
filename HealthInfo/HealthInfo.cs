@@ -11,7 +11,7 @@ namespace HealthInfo
         public override string Author => "Vretu";
         public override string Name => "HealthInfo";
         public override string Prefix => "HealthInfo";
-        public override Version Version => new Version(1, 1, 0);
+        public override Version Version => new Version(1, 2, 0);
         public override Version RequiredExiledVersion { get; } = new Version(9, 6, 0);
         public override PluginPriority Priority => PluginPriority.Lowest;
 
@@ -33,9 +33,27 @@ namespace HealthInfo
             base.OnDisabled();
         }
 
-        private void OnHurt(HurtEventArgs ev) => UpdateHp(ev.Player);
-        private void OnHealed(HealedEventArgs ev) => UpdateHp(ev.Player);
-        private void OnSpawned(SpawnedEventArgs ev) => UpdateHp(ev.Player);
+        private void OnHurt(HurtEventArgs ev)
+        {
+            if (ev.Player == null || ev.Player.Health < 0.01)
+                return;
+
+            UpdateHp(ev.Player);
+        }
+        private void OnHealed(HealedEventArgs ev)
+        {
+            if (ev.Player == null)
+                return;
+
+            UpdateHp(ev.Player);
+        }
+        private void OnSpawned(SpawnedEventArgs ev)
+        {
+            if (ev.Player == null)
+                return;
+
+            UpdateHp(ev.Player);
+        }
 
         private void UpdateHp(Player player)
         {
